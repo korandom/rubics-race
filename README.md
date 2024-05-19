@@ -1,2 +1,2 @@
 # java-zapoctak
-Zápočtový program do  NPRG031, Java 2023. 
+Zápočtový program do  NPRG013, Java 2023. 
