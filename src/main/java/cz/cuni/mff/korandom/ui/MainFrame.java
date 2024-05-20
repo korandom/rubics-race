@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import cz.cuni.mff.korandom.components.Board;
 import cz.cuni.mff.korandom.components.Target;
+import cz.cuni.mff.korandom.components.TimerLabel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -12,13 +13,15 @@ import java.awt.event.ActionEvent;
 public class MainFrame extends JFrame {
     private Board board;
     private Target target;
+    private String name;
 
-    public MainFrame() {
+    public MainFrame(String userName) {
         setTitle("Rubiks Race");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
 
         // Initialize components
+        name = userName;
         target = new Target(250);
         board = new Board(600);
 
@@ -54,24 +57,30 @@ public class MainFrame extends JFrame {
         GridBagConstraints panelGbc = new GridBagConstraints();
         panelGbc.insets = new Insets(10, 20, 10, 20); // Add padding
 
-        // Add Target component to the panel
-        panelGbc.fill = GridBagConstraints.NONE;
+        // Add TimerLabel to the panel
+        Font font = new Font("Dialog", Font.BOLD, 30);
+        TimerLabel timer = new TimerLabel(font);
+        panelGbc.fill = GridBagConstraints.HORIZONTAL;
         panelGbc.gridx = 0;
         panelGbc.gridy = 0;
+        targetPanel.add(timer, panelGbc);
+
+        // Add Target component to the panel
+        panelGbc.fill = GridBagConstraints.NONE;
+        panelGbc.gridy++;
         targetPanel.add(target, panelGbc);
 
         // Add buttons to the panel
-        int fontsize = 30;
-        addButtonToPanel(targetPanel, panelGbc, "NEW", fontsize, 1, new NewButtonAction());
-        addButtonToPanel(targetPanel, panelGbc, "RESET", fontsize, 2, new ResetButtonAction());
-        addButtonToPanel(targetPanel, panelGbc, "EVALUATE", fontsize, 3, new EvaluateButtonAction());
+        addButtonToPanel(targetPanel, panelGbc, "NEW", font, ++panelGbc.gridy, new NewButtonAction());
+        addButtonToPanel(targetPanel, panelGbc, "RESET", font, ++panelGbc.gridy, new ResetButtonAction());
+        addButtonToPanel(targetPanel, panelGbc, "EVALUATE", font, ++panelGbc.gridy, new EvaluateButtonAction());
 
         return targetPanel;
     }
 
-    private void addButtonToPanel(JPanel panel, GridBagConstraints gbc, String text, int fontSize, int gridy, ActionListener actionListener) {
+    private void addButtonToPanel(JPanel panel, GridBagConstraints gbc, String text, Font font, int gridy, ActionListener actionListener) {
         JButton button = new JButton(text);
-        button.setFont(new Font(button.getFont().getName(), Font.PLAIN, fontSize));
+        button.setFont(font);
         button.addActionListener(actionListener);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
@@ -102,11 +111,5 @@ public class MainFrame extends JFrame {
             System.out.println("Evaluate button clicked");
             }
         }
-    }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainFrame frame = new MainFrame();
-            frame.setVisible(true);
-        });
     }
 }
